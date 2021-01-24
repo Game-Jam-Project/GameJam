@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMotor : MonoBehaviour
@@ -17,7 +18,8 @@ public class PlayerMotor : MonoBehaviour
 
     [Header("Weapon Configrations")]
     [SerializeField] private float fireRate = 5f;
-    [SerializeField] private Transform bulletPrefab;
+    [SerializeField] private float trailDelay = 0.02f;
+    [SerializeField] private Transform hitPrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private LayerMask toHit;
 
@@ -27,12 +29,15 @@ public class PlayerMotor : MonoBehaviour
     private int dir;
     private float dashTime;
     private float timeToFire;
+    private float timeToSpawnEffect;
 
     private Rigidbody2D rb;
+    private LineRenderer lr;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        lr = GetComponentInChildren<LineRenderer>();
         extraJumpsValue = extraJumps;
     }
 
@@ -121,7 +126,7 @@ public class PlayerMotor : MonoBehaviour
         {
             if (singleShot)
             {
-                Shoot();
+                StartCoroutine( Shoot() );
             }
         }
         else
@@ -129,12 +134,12 @@ public class PlayerMotor : MonoBehaviour
             if (autoShot && Time.time > timeToFire)
             {
                 timeToFire = Time.time + 1f / fireRate;
-                Shoot();
+                StartCoroutine( Shoot() );
             }
         }
     }
 
-    private void Shoot()
+    private IEnumerator Shoot()
     {
         float mousePosX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
 		float mousePoxY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
@@ -146,12 +151,22 @@ public class PlayerMotor : MonoBehaviour
 
 		Debug.DrawLine(firePointPos, (mousePos - firePointPos ) * 100,Color.green);
 
-		if (hit.collider != null)
+		if (hit.collider != null && hit.collider.gameObject != gameObject)
 		{
 			Debug.DrawLine(firePointPos, hit.point, Color.red);
-		}
 
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            lr.SetPosition(0, firePointPos);
+            lr.SetPosition(1, hit.point);
+		}
+        else
+        {
+            lr.SetPosition(0, firePointPos);
+            lr.SetPosition(1, firePoint.position + firePoint.right * 100);
+        }
+
+        lr.enabled = true;
+        yield return new WaitForSeconds(trailDelay);
+        lr.enabled = false;
     }
 
     private void Flip()

@@ -825,7 +825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbdb1d970aa75e74ca12d26503f940f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletpref: {fileID: 2198577696637732130, guid: 1cbca60f9ddddfc4392270a96df2e762,
+  bulletpref: {fileID: 8743476235942929118, guid: 18738a2c7f06d1e48b8b60a2ebbeb504,
     type: 3}
   muzzle: {fileID: 687526717}
   firepause: 0
