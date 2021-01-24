@@ -16,6 +16,8 @@ public class PlayerMotor : MonoBehaviour
     [Header("Dash Configrations")]
     [SerializeField] private float dashSpeed = 5000f;
     [SerializeField] private float startDashTime = 0.02f;
+    [SerializeField] private float dashRate = 0.3f;
+    [SerializeField] private int dashs = 1;
 
     [Header("Sounds Name")]
     [SerializeField] private string jumoSound = "Jump";
@@ -29,6 +31,8 @@ public class PlayerMotor : MonoBehaviour
     private int extraJumpsValue;
     private int dir;
     private float dashTime;
+    private int dashsValue;
+    private float nextDashTime;
 
     private Rigidbody2D rb;
     private AudioManger audioManger;
@@ -38,7 +42,9 @@ public class PlayerMotor : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         audioManger = AudioManger.instance;
+
         extraJumpsValue = extraJumps;
+        dashsValue = dashs;
     }
 
     #region Moving.
@@ -98,6 +104,7 @@ public class PlayerMotor : MonoBehaviour
         if (isGrounded)
         {
             extraJumpsValue = extraJumps;
+            dashsValue = dashs;
         }
     }
     # endregion
@@ -105,36 +112,44 @@ public class PlayerMotor : MonoBehaviour
     #region Dashing.
     public void Dash(bool dash)
     {
-        if (dir == 0)
+        if (dashsValue > 0)
         {
-            if (dash)
+            if (dir == 0)
             {
-                if (facingRight)
-                    dir = 1;
-                else if (!facingRight)
-                    dir = 2;
-            }
-        }
-        else
-        {
-            if (dashTime <= 0)
-            {
-                dashTime = startDashTime;
-                rb.velocity = Vector2.zero;
-                rb.gravityScale = 1f;
-                dir = 0;
+                if (dash)
+                {
+                    if (Time.time >= nextDashTime)
+                    {
+                        if (facingRight)
+                            dir = 1;
+                        else if (!facingRight)
+                            dir = 2;
+
+                        nextDashTime = Time.time + 1f / dashRate;
+                    }
+                }
             }
             else
             {
-                dashTime -= Time.deltaTime;
-                rb.gravityScale = 0f;
-                audioManger.Play(dashSound);
+                if (dashTime <= 0)
+                {
+                    dashTime = startDashTime;
+                    rb.velocity = Vector2.zero;
+                    rb.gravityScale = 1f;
+                    dashsValue--;
+                    dir = 0;
+                }
+                else
+                {
+                    dashTime -= Time.deltaTime;
+                    rb.gravityScale = 0f;
+                    audioManger.Play(dashSound);
 
-                if (dir == 1)
-                    rb.AddForce(Vector2.right * dashSpeed);
-                else if (dir == 2)
-                    rb.AddForce(Vector2.left * dashSpeed);
-                
+                    if (dir == 1)
+                        rb.AddForce(Vector2.right * dashSpeed);
+                    else if (dir == 2)
+                        rb.AddForce(Vector2.left * dashSpeed);
+                }
             }
         }
     }
