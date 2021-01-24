@@ -29,10 +29,9 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         float move = Input.GetAxis("Horizontal");
-        float vert = Input.GetAxisRaw("Vertical");
 
         motor.Move(move, jump);
-        motor.Dash(vert, dash);
+        motor.Dash(dash);
 
         jump = false;
         dash = false;

@@ -42,11 +42,6 @@ public class PlayerMotor : MonoBehaviour
                 isGrounded = true;
             }
         }
-
-        if (isGrounded)
-        {
-            extraJumpsValue = extraJumps;
-        }
     }
 
     public void Move(float move, bool jump)
@@ -62,35 +57,32 @@ public class PlayerMotor : MonoBehaviour
             Flip();
         }
 
-        if (jump && isGrounded)
+        if (jump && extraJumpsValue > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumoForce);
+            extraJumpsValue--;
+        }
+        else if (jump && extraJumpsValue == 0 &&isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumoForce);
         }
 
-        if (jump)
+        if (isGrounded)
         {
-            if (extraJumpsValue > 0)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, jumoForce);
-                extraJumpsValue--;
-            }
+            extraJumpsValue = extraJumps;
         }
     }
 
-    public void Dash(float vert, bool dash)
+    public void Dash(bool dash)
     {
         if (dir == 0)
         {
             if (dash)
             {
-                if (vert > 0.001f)
+                if (facingRight)
                     dir = 1;
-                else if (vert < -0.001f)
-                    dir = 2;
-                else if (facingRight)
-                    dir = 3;
                 else if (!facingRight)
-                    dir = 4;
+                    dir = 2;
             }
         }
         else
@@ -108,18 +100,8 @@ public class PlayerMotor : MonoBehaviour
                 rb.gravityScale = 0f;
 
                 if (dir == 1)
-                {
-                    rb.velocity = Vector2.zero;
-                    rb.AddForce(Vector2.up * dashSpeed);
-                }
-                else if (dir == 2)
-                {
-                    rb.velocity = Vector2.zero;
-                    rb.AddForce(Vector2.down * dashSpeed);
-                }
-                else if (dir == 3)
                     rb.AddForce(Vector2.right * dashSpeed);
-                else if (dir == 4)
+                else if (dir == 2)
                     rb.AddForce(Vector2.left * dashSpeed);
                 
             }
