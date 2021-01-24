@@ -264,6 +264,11 @@ MonoBehaviour:
     m_Bits: 256
   dashSpeed: 2000
   startDashTime: 0.05
+  dashRate: 2
+  dashs: 1
+  jumoSound: Jump
+  landingSound: Landing
+  dashSound: Dash
 --- !u!1 &2137758041936538038
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +309,7 @@ PrefabInstance:
     - target: {fileID: 3125417315000805524, guid: 47e553940db040d4890079f287ee28f8,
         type: 3}
       propertyPath: fireRate
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3559373809197246844, guid: 47e553940db040d4890079f287ee28f8,
         type: 3}
