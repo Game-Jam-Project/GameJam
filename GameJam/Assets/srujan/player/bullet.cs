@@ -1,30 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class bullet : MonoBehaviour
 {
-    public float speed,time;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float speed = 2000;
+    [SerializeField] private float time = 3f;
+    [SerializeField] private Rigidbody2D rb;
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        transform.Translate(Vector2.right*Time.deltaTime*speed);
-        time -= Time.deltaTime;
-        if (time <= 0)
+        rb.velocity = transform.right * speed;
+        Destroy(gameObject, time);
+
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.2f);
+        foreach (Collider2D collider in colliders)
         {
-            Object.Destroy(this.gameObject);
-        }
-    }
+            if (collider.gameObject != gameObject)
+            {
+                Destroy(gameObject);
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Object.Destroy(this.gameObject);
+                Debug.Log(collider.name);
+            }
+        }
     }
 }

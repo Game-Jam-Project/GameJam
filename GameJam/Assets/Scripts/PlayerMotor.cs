@@ -15,11 +15,18 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField] private float dashSpeed = 5000f;
     [SerializeField] private float startDashTime = 0.02f;
 
+    [Header("Weapon Configrations")]
+    [SerializeField] private float fireRate = 5f;
+    [SerializeField] private Transform bulletPrefab;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private LayerMask toHit;
+
     private bool facingRight = true;
     private bool isGrounded;
     private int extraJumpsValue;
     private int dir;
     private float dashTime;
+    private float timeToFire;
 
     private Rigidbody2D rb;
 
@@ -37,7 +44,7 @@ public class PlayerMotor : MonoBehaviour
 
         foreach (Collider2D collider in colliders)
         {
-            if (collider.gameObject != GetComponentInChildren<BoxCollider2D>().gameObject)
+            if (collider.gameObject != GetComponent<BoxCollider2D>().gameObject)
             {
                 isGrounded = true;
             }
@@ -106,6 +113,45 @@ public class PlayerMotor : MonoBehaviour
                 
             }
         }
+    }
+
+    public void ShootInput(bool singleShot, bool autoShot)
+    {
+        if (fireRate == 0)
+        {
+            if (singleShot)
+            {
+                Shoot();
+            }
+        }
+        else
+        {
+            if (autoShot && Time.time > timeToFire)
+            {
+                timeToFire = Time.time + 1f / fireRate;
+                Shoot();
+            }
+        }
+    }
+
+    private void Shoot()
+    {
+        float mousePosX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+		float mousePoxY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+		Vector2 mousePos = new Vector2(mousePosX, mousePoxY);
+
+		Vector2 firePointPos = new Vector2(firePoint.position.x, firePoint.position.y);
+
+		RaycastHit2D hit = Physics2D.Raycast(firePointPos, mousePos - firePointPos, 100f, toHit);
+
+		Debug.DrawLine(firePointPos, (mousePos - firePointPos ) * 100,Color.green);
+
+		if (hit.collider != null)
+		{
+			Debug.DrawLine(firePointPos, hit.point, Color.red);
+		}
+
+        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
     }
 
     private void Flip()
