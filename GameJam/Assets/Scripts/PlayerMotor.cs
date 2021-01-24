@@ -17,7 +17,6 @@ public class PlayerMotor : MonoBehaviour
 
     private bool facingRight = true;
     private bool isGrounded;
-    private bool wasGrounded;
     private int extraJumpsValue;
     private int dir;
     private float dashTime;
@@ -33,7 +32,6 @@ public class PlayerMotor : MonoBehaviour
     private void FixedUpdate()
     {
         isGrounded = false;
-        wasGrounded = isGrounded;
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadias, whatIsGround);
 
@@ -45,7 +43,7 @@ public class PlayerMotor : MonoBehaviour
             }
         }
 
-        if (wasGrounded != isGrounded && isGrounded)
+        if (isGrounded)
         {
             extraJumpsValue = extraJumps;
         }
@@ -110,9 +108,15 @@ public class PlayerMotor : MonoBehaviour
                 rb.gravityScale = 0f;
 
                 if (dir == 1)
+                {
+                    rb.velocity = Vector2.zero;
                     rb.AddForce(Vector2.up * dashSpeed);
+                }
                 else if (dir == 2)
+                {
+                    rb.velocity = Vector2.zero;
                     rb.AddForce(Vector2.down * dashSpeed);
+                }
                 else if (dir == 3)
                     rb.AddForce(Vector2.right * dashSpeed);
                 else if (dir == 4)
