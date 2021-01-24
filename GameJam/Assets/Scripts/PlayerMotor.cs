@@ -17,33 +17,44 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField] private float dashSpeed = 5000f;
     [SerializeField] private float startDashTime = 0.02f;
 
-    [Header("Weapon Configrations")]
-    [SerializeField] private float fireRate = 5f;
-    [SerializeField] private float trailDelay = 0.02f;
-    [SerializeField] private Transform hitPrefab;
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private LayerMask toHit;
+    [Header("Sounds Name")]
+    [SerializeField] private string jumoSound = "Jump";
+    [SerializeField] private string landingSound = "Landing";
+    [SerializeField] private string dashSound = "Dash";
 
     private bool facingRight = true;
     private bool isGrounded;
+    private bool wasGrounded;
+    private bool isLanding;
     private int extraJumpsValue;
     private int dir;
     private float dashTime;
-    private float timeToFire;
-    private float timeToSpawnEffect;
 
     private Rigidbody2D rb;
-    private LineRenderer lr;
+    private AudioManger audioManger;
     #endregion
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        lr = GetComponentInChildren<LineRenderer>();
+        audioManger = AudioManger.instance;
         extraJumpsValue = extraJumps;
     }
 
     #region Moving.
+    private void LateUpdate()
+        {
+            wasGrounded = isGrounded;
+        }
+
+        private void Update()
+        {
+        if (wasGrounded != isGrounded && isGrounded == true)
+        {
+            audioManger.Play(landingSound);                
+        }
+    }
+
     private void FixedUpdate()
     {
         isGrounded = false;
@@ -75,11 +86,13 @@ public class PlayerMotor : MonoBehaviour
         if (jump && extraJumpsValue > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumoForce);
+            audioManger.Play(jumoSound);
             extraJumpsValue--;
         }
         else if (jump && extraJumpsValue == 0 &&isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumoForce);
+            audioManger.Play(jumoSound);
         }
 
         if (isGrounded)
@@ -115,6 +128,7 @@ public class PlayerMotor : MonoBehaviour
             {
                 dashTime -= Time.deltaTime;
                 rb.gravityScale = 0f;
+                audioManger.Play(dashSound);
 
                 if (dir == 1)
                     rb.AddForce(Vector2.right * dashSpeed);
@@ -123,64 +137,6 @@ public class PlayerMotor : MonoBehaviour
                 
             }
         }
-    }
-    #endregion
-
-    #region Shooting.
-    public void ShootInput(bool singleShot, bool autoShot)
-    {
-        if (fireRate == 0)
-        {
-            if (singleShot)
-            {
-                StartCoroutine( Shoot() );
-            }
-        }
-        else
-        {
-            if (autoShot && Time.time > timeToFire)
-            {
-                timeToFire = Time.time + 1f / fireRate;
-                StartCoroutine( Shoot() );
-            }
-        }
-    }
-
-    private IEnumerator Shoot()
-    {
-        float mousePosX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-		float mousePoxY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
-		Vector2 mousePos = new Vector2(mousePosX, mousePoxY);
-
-		Vector2 firePointPos = new Vector2(firePoint.position.x, firePoint.position.y);
-
-		RaycastHit2D hit = Physics2D.Raycast(firePointPos, mousePos - firePointPos, 100f, toHit);
-
-		Debug.DrawLine(firePointPos, (mousePos - firePointPos ) * 100,Color.green);
-
-		if (hit.collider != null && hit.collider.gameObject != gameObject)
-		{
-			Debug.DrawLine(firePointPos, hit.point, Color.red);
-
-            lr.SetPosition(0, firePointPos);
-            lr.SetPosition(1, hit.point);
-
-            if(hit.collider.tag == "minion" && hit.collider.GetComponent<minionhealth>().phase == false)
-            {
-                hit.collider.GetComponent<minionhealth>().health--;
-                hit.collider.GetComponent<minionhealth>().phase = true;
-            }
-		}
-        else
-        {
-            lr.SetPosition(0, firePointPos);
-            lr.SetPosition(1, firePoint.position + firePoint.right * 100);
-        }
-
-        
-        lr.enabled = true;
-        yield return new WaitForSeconds(trailDelay);
-        lr.enabled = false;
     }
     #endregion
 

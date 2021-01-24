@@ -9,10 +9,12 @@ public class PlayerController : MonoBehaviour
     private bool autoShot;
 
     private PlayerMotor motor;
+    private Weapon weapon;
 
     private void Start()
     {
         motor = GetComponent<PlayerMotor>();
+        weapon = GetComponentInChildren<Weapon>();
     }
 
     private void Update()
@@ -44,7 +46,7 @@ public class PlayerController : MonoBehaviour
 
         motor.Move(move, jump);
         motor.Dash(dash);
-        motor.ShootInput(singleShot, autoShot);
+        weapon.ShootInput(singleShot, autoShot);
 
         jump = false;
         dash = false;

@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5907284986986566069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5907284986986566067}
+  - component: {fileID: 5907284986986566068}
+  m_Layer: 0
+  m_Name: AudioManger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5907284986986566067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5907284986986566069}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5907284986986566068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5907284986986566069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c179e0b48880db43b1975e51cb13352, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterMixer: {fileID: 24300002, guid: 891d0bf2e7c49da4aab7fbd9afe8a882, type: 2}
+  sounds:
+  - name: Shot
+    clip: {fileID: 8300000, guid: 4c220781d5f6dea47bb940e96a50e38c, type: 3}
+    volume: 0.4
+    pitch: 1.1
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 0
+    source: {fileID: 0}
+  - name: Jump
+    clip: {fileID: 8300000, guid: 4e66334a595bad44aa350760eba0e9a6, type: 3}
+    volume: 0.1
+    pitch: 2
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 0
+    source: {fileID: 0}
+  - name: Landing
+    clip: {fileID: 8300000, guid: 3176302dcebf5654d8e8febb583a8b91, type: 3}
+    volume: 0.08
+    pitch: 3
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 0
+    source: {fileID: 0}
+  - name: Dash
+    clip: {fileID: 8300000, guid: 0a75d86f0fd1fbc4897c4a00541052bd, type: 3}
+    volume: 0.1
+    pitch: 1.2
+    randomVolume: 0.1
+    randomPitch: 0
+    loop: 0
+    source: {fileID: 0}
