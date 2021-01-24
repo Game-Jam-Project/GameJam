@@ -2,31 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class minion : MonoBehaviour
+public class shootingminion : MonoBehaviour
 {
-    public float range,speed,start;
-    public GameObject player;
-    // Start is called before the first frame update
+    public GameObject player,projectile;
+    public float interval, intervalval, range;
+    
     void Start()
     {
-        start = transform.position.x;
         player = GameObject.FindGameObjectWithTag("player");
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector2.right*Time.deltaTime*speed);
-        if (transform.position.x > start + range)
-        {
-            transform.eulerAngles=new Vector3(0,-180,0);
-        }
+        interval -= Time.deltaTime;
 
-        if (transform.position.x < start)
+        if (Vector2.Distance(player.transform.position, transform.position) <= range)
         {
-            transform.eulerAngles = new Vector3(0, 0, 0);
+            if (interval <= 0)
+            {
+                Instantiate(projectile, transform.position, Quaternion.identity);
+                interval = intervalval;
+            }
         }
-    }
+        else
+        {
+            interval = intervalval;
+        }
+        
+    
+}
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
@@ -37,7 +42,7 @@ public class minion : MonoBehaviour
                 player.GetComponent<playerhealth>().health -= 1;
                 player.GetComponent<playerhealth>().phase = true;
             }
-            
+
         }
     }
 }

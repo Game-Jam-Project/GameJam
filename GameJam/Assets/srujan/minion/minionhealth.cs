@@ -6,6 +6,8 @@ public class minionhealth : MonoBehaviour
 {
     public int health;
     public GameObject[] bombs;
+    public bool phase;
+    public float time, timeval;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,17 @@ public class minionhealth : MonoBehaviour
             {
                 health -= 3;
             }
+        }
+
+        if (phase == true)
+        {
+            time -= Time.deltaTime; 
+        }
+
+        if (time <= 0)
+        {
+            phase = false;
+            time = timeval;
         }
     }
 

@@ -39,6 +39,13 @@ public class bomb : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        explode = true;
+        if (collision.collider.tag == "player")
+        {
+            Physics2D.IgnoreCollision(collision.collider.GetComponent<BoxCollider2D>(),gameObject.GetComponent<CircleCollider2D>());
+        }
+        else
+        {
+            explode = true;
+        }
     }
 }

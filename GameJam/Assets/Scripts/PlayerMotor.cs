@@ -164,6 +164,12 @@ public class PlayerMotor : MonoBehaviour
 
             lr.SetPosition(0, firePointPos);
             lr.SetPosition(1, hit.point);
+
+            if(hit.collider.tag == "minion" && hit.collider.GetComponent<minionhealth>().phase == false)
+            {
+                hit.collider.GetComponent<minionhealth>().health--;
+                hit.collider.GetComponent<minionhealth>().phase = true;
+            }
 		}
         else
         {
@@ -171,6 +177,7 @@ public class PlayerMotor : MonoBehaviour
             lr.SetPosition(1, firePoint.position + firePoint.right * 100);
         }
 
+        
         lr.enabled = true;
         yield return new WaitForSeconds(trailDelay);
         lr.enabled = false;

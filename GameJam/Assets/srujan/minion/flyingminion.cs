@@ -2,29 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class minion : MonoBehaviour
+public class flyingminion : MonoBehaviour
 {
-    public float range,speed,start;
+
     public GameObject player;
+    public float speed = 5,range = 4;
+    public bool active;
     // Start is called before the first frame update
     void Start()
     {
-        start = transform.position.x;
         player = GameObject.FindGameObjectWithTag("player");
+    
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector2.right*Time.deltaTime*speed);
-        if (transform.position.x > start + range)
+        if (active)
         {
-            transform.eulerAngles=new Vector3(0,-180,0);
+            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
         }
 
-        if (transform.position.x < start)
+        if (Vector2.Distance(player.transform.position,transform.position)<range && active == false)
         {
-            transform.eulerAngles = new Vector3(0, 0, 0);
+            active = true;
         }
     }
 
@@ -37,7 +38,7 @@ public class minion : MonoBehaviour
                 player.GetComponent<playerhealth>().health -= 1;
                 player.GetComponent<playerhealth>().phase = true;
             }
-            
+
         }
     }
 }
