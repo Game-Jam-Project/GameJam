@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMotor : MonoBehaviour
 {
+    #region Varibals.
     [Header("General Movment")]
     [SerializeField] private float speed = 10f;
     [SerializeField] private float jumoForce = 18f;
@@ -33,6 +34,7 @@ public class PlayerMotor : MonoBehaviour
 
     private Rigidbody2D rb;
     private LineRenderer lr;
+    #endregion
 
     private void Start()
     {
@@ -41,6 +43,7 @@ public class PlayerMotor : MonoBehaviour
         extraJumpsValue = extraJumps;
     }
 
+    #region Moving.
     private void FixedUpdate()
     {
         isGrounded = false;
@@ -84,7 +87,9 @@ public class PlayerMotor : MonoBehaviour
             extraJumpsValue = extraJumps;
         }
     }
+    # endregion
 
+    #region Dashing.
     public void Dash(bool dash)
     {
         if (dir == 0)
@@ -119,7 +124,9 @@ public class PlayerMotor : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region Shooting.
     public void ShootInput(bool singleShot, bool autoShot)
     {
         if (fireRate == 0)
@@ -168,6 +175,7 @@ public class PlayerMotor : MonoBehaviour
         yield return new WaitForSeconds(trailDelay);
         lr.enabled = false;
     }
+    #endregion
 
     private void Flip()
     {
